@@ -18,7 +18,7 @@ object mapsExercise extends App{
   val wordLength = wordsSeq.map(n=>n.length)
   println(wordLength.mkString(","))  //sequence of word lengths
 
-  val filteredWords = wordLength.filter(n=>n>5)
+  val filteredWords = words.filter(n=>n.length>5)
   println(filteredWords.mkString(","))
 
     // val longWords = for (w <- words if wordLength > 5) {
