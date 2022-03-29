@@ -8,7 +8,7 @@ class Animal (val name:String,
   println(s"I'm a $animalType and I go $sound") }
 
   def meet (contact:String): Unit = {
-  if (contact == likes) println(s"Hi! $name likes you")
+  if (contact == likes) println(s"Hi, $contact! $name likes you")
   else println("No, thanks, gotta go!")
   }
 }
