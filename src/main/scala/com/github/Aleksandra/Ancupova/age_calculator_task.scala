@@ -1,8 +1,10 @@
+package com.github.Aleksandra.Ancupova
+
 import java.time.Year
 import scala.io.StdIn.readLine
 
-object age_calculator_task extends App{
-  val myName = readLine ("What is your name?")
+object age_calculator_task extends App {
+  val myName = readLine("What is your name?")
   println(s"Hi $myName!")
   val myAge = readLine("How old are you?").toInt
   val year = Year.now.getValue

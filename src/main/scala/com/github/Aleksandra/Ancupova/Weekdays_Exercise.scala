@@ -1,6 +1,8 @@
+package com.github.Aleksandra.Ancupova
+
 object Weekdays_Exercise extends App {
 
-  def getDay(day:Int): String = day match {
+  def getDay(day: Int): String = day match {
     case 1 => "Monday"
     case 2 => "Tuesday"
     case 3 => "Wednesday"
@@ -11,6 +13,7 @@ object Weekdays_Exercise extends App {
     case _ => "Unknown Weekday"
 
   }
+
   println(getDay(2))
   println(getDay(4))
   println(getDay(43))
@@ -26,7 +29,6 @@ object Weekdays_Exercise extends App {
   println(getDayType("SUNDAY"))
   println(getDayType("sAtuRday"))
   println(getDayType("siiilly"))
-
 
 
 }

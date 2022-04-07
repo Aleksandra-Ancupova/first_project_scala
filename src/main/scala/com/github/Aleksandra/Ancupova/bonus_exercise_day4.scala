@@ -1,3 +1,5 @@
+package com.github.Aleksandra.Ancupova
+
 import scala.io.StdIn.readLine
 
 object bonus_exercise_day4 extends App {
@@ -11,12 +13,15 @@ object bonus_exercise_day4 extends App {
   //Bonus is years worked over 2 years * 15% of monthly wage
   //so 5 years worked, 1000 Euros wage would give 450 Euro bonus (3 years * 150)
 
-  val name = readLine ("Hi, what's your name?")
-  val tenure = readLine (s"How long have you worked at CocaCola, $name?").toInt
+  val name = readLine("Hi, what's your name?")
+  val tenure = readLine(s"How long have you worked at CocaCola, $name?").toInt
   val salary = readLine("And what is your monthly salary now?").toInt
   val bonusPercent = 0.15
-  val bonus = ((tenure - 2) * salary * bonusPercent).toInt
-  if (tenure > 2) println(s"Congrats! Your Christmas bonus is $bonus")
-  else println ("Sorry, your tenure is too low for a bonus")
+
+  if (tenure > 2) {
+    val bonus = ((tenure - 2) * salary * bonusPercent).toInt
+    println(s"Congrats! Your Christmas bonus is $bonus")
+  }
+  else println("Sorry, your tenure is too low for a bonus")
 
 }

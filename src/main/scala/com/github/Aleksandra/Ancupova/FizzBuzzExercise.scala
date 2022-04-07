@@ -1,4 +1,6 @@
-object FizzBuzzExercise extends App{
+package com.github.Aleksandra.Ancupova
+
+object FizzBuzzExercise extends App {
   //TODO create a FizzBuzz program based on children's game I think from Britain
   //for numbers 1 to 100 (included!)
   //print FizzBuzz if number divides evenly by both 5 and 7

@@ -1,3 +1,5 @@
+package com.github.Aleksandra.Ancupova
+
 trait FlyingTrait {
   def fly(): Unit
 }
@@ -24,6 +26,7 @@ object Birds_Exercise extends App {
 
   val penguin1 = new Penguin("Claus")
   penguin1.swim()
+  penguin1.run(2)
   val penguin2 = new Penguin("Bert")
   penguin2.swim()
 
