@@ -1,8 +1,6 @@
 package com.github.Aleksandra.Ancupova
 
-
 case class Laptop(name:String, speed:Double, manufacturer:String)
-
 
 object Day16 extends App {
   println("Testing some stuff")
