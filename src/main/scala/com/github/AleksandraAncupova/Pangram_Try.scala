@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 object Pangram_Try extends App {
   //TODO write a pangram tester

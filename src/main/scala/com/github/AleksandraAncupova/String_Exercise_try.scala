@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 object String_Exercise_try extends App {
   //TODO

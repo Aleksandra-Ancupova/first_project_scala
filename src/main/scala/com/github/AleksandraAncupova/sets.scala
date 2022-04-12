@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 object sets extends App {
 

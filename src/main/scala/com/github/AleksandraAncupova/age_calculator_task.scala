@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 import java.time.Year
 import scala.io.StdIn.readLine

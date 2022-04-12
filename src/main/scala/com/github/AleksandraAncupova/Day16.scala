@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 case class Laptop(name:String, speed:Double, manufacturer:String)
 

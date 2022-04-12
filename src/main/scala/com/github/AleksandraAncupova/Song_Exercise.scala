@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 class Song (val title:String, val author:String, val lyrics:Seq[String]) {
   println(s"New com.github.Aleksandra.Ancupova.Song $title by $author has been made!")

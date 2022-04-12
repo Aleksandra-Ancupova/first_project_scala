@@ -1,4 +1,4 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
 object FizzBuzzExercise extends App {
   //TODO create a FizzBuzz program based on children's game I think from Britain

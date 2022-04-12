@@ -1,6 +1,6 @@
-package com.github.Aleksandra.Ancupova
+package com.github.AleksandraAncupova
 
-import com.github.Aleksandra.Ancupova.Weekdays.Day
+import Weekdays.Day
 
 import scala.Console.println
 
