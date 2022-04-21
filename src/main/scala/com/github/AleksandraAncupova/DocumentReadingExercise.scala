@@ -1,6 +1,7 @@
 package com.github.AleksandraAncupova
 
-import com.github.AleksandraAncupova.testing_ListOfFiles.fileLines
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 case class Document (title:String = "",
                 author:String = "",
@@ -10,18 +11,19 @@ case class Document (title:String = "",
   val rowCount:Int = rows.length
   val wordCount:Int = MyUtil.getWordCountPerLine(rows).sum
 
-  println(s"New document is added with $rowCount lines!")
-  println(s"New document is added with $wordCount words in it!")}
+  println(s"New document $title is added with $rowCount lines!")
+  println(s"New document $title is added with $wordCount words in it!")
+  }
 
   object DocumentReadingExercise extends App {
 
-  val fileLines = MyUtil.getLinesFromFile("src/resources/webPages2.txt").mkString
-
+  val source = "src/resources/webPages2.txt"
+  val fileLines = MyUtil.getLinesFromFile(source)
 
   def getDocumentsFromUrls(files:Array[String]): Array[Document] = {
       val documentArray = for (file <- files) yield {
-        val text = MyUtil.getTextFromWeb(file)
-        val rows = MyUtil.getLinesFromFile(text)
+        val text = MyUtil.getTextFromWebAndSave(file, "src/resources/temp")
+        val rows = MyUtil.getLinesFromFile("src/resources/temp")
         val title = GutenbergUtil.getTitle(rows)
         val author = GutenbergUtil.getAuthor(rows)
         val url = file.mkString
@@ -30,10 +32,26 @@ case class Document (title:String = "",
     documentArray
    }
 
-    println(fileLines)
+    val filledArray = getDocumentsFromUrls(fileLines)
 
+    def save(dst:String = "", folder:String = "src/resources/texts"):Unit = {
+      for (eachArray <- filledArray) {
+        Thread.sleep(200)
+          val modifiedDocument = Array[String](s"URL: ${eachArray.url}",
+          s"Author: ${eachArray.author}",
+          s"Title: ${eachArray.title}",
+          "\n" * 3)
 
+        val finalDocument = modifiedDocument ++ eachArray.rows
 
-  // def save(dst:String = "", folder:String = "src/resources/texts"):Unit = { }
+        val timestamp = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm").format(LocalDateTime.now)
+
+        MyUtil.saveLines(s"$folder" + "/" + s"${eachArray.author.take(10)}" + "_" + s"${eachArray.title.take(15)}"
+          + "_" + timestamp + ".txt", finalDocument)
+
+      }
+    }
+
+    save()
 
 }
