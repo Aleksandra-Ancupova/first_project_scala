@@ -57,6 +57,4 @@ object ParsingXML extends App {
   println("Here are all distinct authors:")
   authors.foreach(println)
 
-
-
 }
