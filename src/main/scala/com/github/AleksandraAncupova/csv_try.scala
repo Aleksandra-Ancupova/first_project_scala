@@ -31,7 +31,7 @@ object csv_try extends App {
 
   val lettuceHead = lettuceEntries.filter(_.unit == "head")
   val lettuceHeadPrices = lettuceHead.map(_.price)
-  println(lettuceHeadPrices.mkString)
+  println(lettuceHeadPrices.mkString(" | "))
 
   val lettuceHeadAveragePrice = lettuceHeadPrices.sum/lettuceHead.length
   val roundedAverageHead = MyUtil.myRound(lettuceHeadAveragePrice, 2)
@@ -39,7 +39,7 @@ object csv_try extends App {
 
   val lettuceTwin = lettuceEntries.filter(_.unit == "twin")
   val lettuceTwinPrices = lettuceTwin.map(_.price)
-  println(lettuceTwinPrices.mkString)
+  println(lettuceTwinPrices.mkString(" | "))
 
   val lettuceTwinAveragePrice = lettuceTwinPrices.sum/lettuceTwin.length
   val roundedAverageTwin = MyUtil.myRound(lettuceTwinAveragePrice,2)

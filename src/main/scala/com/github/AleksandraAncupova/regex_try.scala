@@ -7,9 +7,10 @@ object regex_try extends App{
 
   val text = MyUtil.getTextFromWebAndSave(src,dst)
 
-  val dateRedEx = raw"\D*(\d{4})\D*".r
+  val dateRedEx = raw"\b(\d{4})\b".r
 
   val allYears = for (y <- dateRedEx.findAllMatchIn(text)) yield y.group(1)
+
   allYears.foreach(println)
 
 
