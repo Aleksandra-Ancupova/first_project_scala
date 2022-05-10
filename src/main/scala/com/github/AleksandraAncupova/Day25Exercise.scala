@@ -74,7 +74,7 @@ object Day25Exercise extends App {
   trackCollectionStrings.take(5).foreach(println)
 
   // SAVE AS CSV
-  val dst = "src/resources/csv/tracks"
+    val dst = "src/resources/csv/tracks"
 
 
 }
