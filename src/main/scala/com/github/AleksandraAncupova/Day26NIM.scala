@@ -1,116 +1,7 @@
 package com.github.AleksandraAncupova
 
-import java.nio.file.{Files, Paths}
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import scala.collection.mutable.ArrayBuffer
+import java.io.FileNotFoundException
 import scala.io.StdIn.readLine
-
-class Nim(
-           val playerA:String,
-           val playerB: String,
-           val startingCount:Int = 21,
-           val gameEndCondition:Int = 0,
-           val minMove: Int = 1,
-           val maxMove: Int = 3,
-           var isPlayerATurn:Boolean = true) {
-
-  println("Created a new game object of NIM")
-
-  var currentState:Int = startingCount
-  var currentPlayer: String = if (isPlayerATurn) playerA else playerB
-  var movesArray: ArrayBuffer[Int] = ArrayBuffer()
-
-  def removeMatches(unsafeMove:Int):Int = {
-    val safeMove = clampMove(unsafeMove, minMove, maxMove)
-    currentState -= safeMove //so we mutate/modify internal currentState = currentState - safeMove
-    movesArray += safeMove //save the move to move log
-    currentState
-  }
-
-  //I am removing parameters since showStatus only cares about properties local to this object
-  def showStatus():Unit = {
-    if (currentState > gameEndCondition) {
-      println(s"There are $currentState matches left.")
-      println(s"It is $currentPlayer's turn.")
-    }
-    else {
-      println(s"The game has ended. $currentPlayer (same as ${getWinner()} ) has won. ")
-      println(s"Better luck next time ${getLoser()}.")
-      //we could calculate the loser's name as well of course
-    }
-  }
-
-  def getWinner():String = {
-    if (isGameActive()) "N/A" // could be empty string
-    else currentPlayer //since currentPlayer with no moves to make is the winner
-  }
-
-  def getLoser():String = {
-    if (isGameActive()) "N/A" // could be empty string
-    else { //game is finished
-      if (isPlayerATurn) playerB else playerA
-    }
-  }
-
-  def clampMove(move: Int, min:Int, max:Int, verbose: Boolean  = true): Int = {
-    if (move > max) {
-      if (verbose) println(s"$move was too much, you will have to settle for $max")
-      max //return since this is the last line of the function
-    } else if (move < min) {
-      if (verbose) println(s"$move is too little, you will have to settle for $min")
-      min //return
-    } else {
-      move //return
-    }
-  }
-
-  /**
-   * Toggles to the next player
-   * @return
-   */
-  def nextPlayer():String = {
-    isPlayerATurn = !isPlayerATurn
-    currentPlayer = if (isPlayerATurn) playerA else playerB
-    currentPlayer
-  }
-
-  def isCurrentPlayerComputer():Boolean = currentPlayer == "COMPUTER"
-
-  def isGameActive():Boolean = currentState > gameEndCondition
-
-  def printMoves():Array[Int] = {
-    for ((move, index) <- movesArray.zipWithIndex) {
-      val playerName = if (index % 2 == 0) playerA else playerB
-      println(s"Move ${index+1}. $playerName took $move matches")
-    }
-    movesArray.toArray
-  }
-
-  def saveGameResult(dst: String) = {
-    if (! Files.exists(Paths.get(dst))) {
-      println("Saving header since no file exists")
-      val header = "winner, loser, date"
-      MyUtil.saveText(dst, header)
-    } else {
-      val timeNow = DateTimeFormatter.ofPattern("yyyy-MM-dd-HH-mm").format(LocalDateTime.now)
-      val row = s"${getWinner()}, ${getLoser()}, $timeNow"
-      MyUtil.saveText(dst, row, append = true)
-    }
-  }
-
-
-//  def saveGameScore(folder:String = "src/resources/nim", prefix:String = "game", suffix = ".csv") = {
-//
-//    val row = s""
-//    val timeNow = DateTimeFormatter.ofPattern("yyyy_MM_dd_HH_mm_ss").format(LocalDateTime.now)
-//    val moves = movesArray.foreach(println)
-//
-//    MyUtil.saveText()
-//  }
-
-}
-
 
 object Day26NIM extends App {
 
@@ -147,26 +38,45 @@ object Day26NIM extends App {
   val isPlayerAStarting = true //so A goes first
 
   //TODO create a new object holding all the information necessary for a game nim from this class Nim
-  val nimGame = new Nim(playerA, playerB,startingCount, gameEndCondition, minMove, maxMove, isPlayerAStarting)
+  val nimGame = new NIM(playerA, playerB,startingCount, gameEndCondition, minMove, maxMove, isPlayerAStarting)
 
   def getComputerMove():Int = 2 //TODO add more complex logic later
   //computer can be made to play perfectly
   //or we could add some randomness
 
+  //TODO error checking
+
+  def getHumanMove(): Int = {
+    var needsInteger = true
+    var myInteger = 0
+    while (needsInteger) {
+      val moveInput = readLine(s"How many marches do you want to take ${nimGame.currentPlayer}? (1-3)")
+      try {
+        myInteger = moveInput.toInt
+        needsInteger = false // this line will not execure if error is encountered
+      } catch {
+        case e:FileNotFoundException => println("No such file")
+        case unknown => println("Got this unknown exception we need an integer!: " + unknown)
+      }
+    }
+    myInteger
+  }
+
   //main loop - while there are some matches play on
   //TODO implement PvP - player versus player - computer only checks the rules
-  while (nimGame.isGameActive()) {
+  while (nimGame.isGameActive) {
     //show the game state
     //    println(s"Currently there are $currentState matches on the table")
     nimGame.showStatus()
 
-    val move = if (nimGame.isCurrentPlayerComputer()) {
+    val move = if (nimGame.isCurrentPlayerComputer) {
       getComputerMove()
     } else {
-      readLine(s"How many matches do you want to take ${nimGame.currentPlayer}? (1-3) ").toInt
-    } //TODO error checking
+      getHumanMove()
+    }
+
     nimGame.removeMatches(move)
-    nimGame.nextPlayer()
+    nimGame.nextPlayer
   }
   //TODO PvC - player versus computer you will need to add some logic to the computer, add more levels
 
@@ -177,12 +87,13 @@ object Day26NIM extends App {
   //  val loser = if (!isPlayerATurn) playerA else playerB
   //  println(s"Game ended. Congratulations $winner! Better luck next time $loser.")
   nimGame.showStatus()
-  nimGame.printMoves()
+  nimGame.printMoves
 
   // TODO add saving to Database, stats etc
 
   // Day27NIMPersistence.saveGameResult(saveDst, nimGame.getWinner(), nimGame.getLoser())
 
   nimGame.saveGameResult(saveDst)
+  nimGame.saveGameScore()
 
 }
