@@ -86,6 +86,10 @@ class NIM(
     movesArray.toArray
   }
 
+  def getMoves: Array[Int] = {
+    movesArray.toArray
+  }
+
   def saveGameResult(dst: String): Unit = {
     if (! Files.exists(Paths.get(dst))) {
       println("Saving header since no file exists")

@@ -19,6 +19,7 @@ object Day26NIM extends App {
   //setup
   //we will start with 21 matches/tokens
   val saveDst = "src/resources/nim/scores.csv"
+  val db = new NimDB("src/resources/nim/nim.db")
   val startingCount = 21
   val gameEndCondition = 0
   val minMove = 1
@@ -95,5 +96,12 @@ object Day26NIM extends App {
 
   nimGame.saveGameResult(saveDst)
   nimGame.saveGameScore()
+
+  db.insertResult(nimGame.getWinner, nimGame.getLoser)
+  db.insertFullScore(nimGame.getMoves)
+
+  db.printTopPlayers()
+
+  db.printTopLosers()
 
 }
