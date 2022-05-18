@@ -257,7 +257,7 @@ class NimDB(val dbPath: String) {
     val statement = conn.createStatement()
     val rs = statement.executeQuery(sql)
     while(rs.next()) {
-      val player = Player(rs.getString("name"), wins = rs.getInt("losses"))
+      val player = Player(rs.getString("name"), losses = rs.getInt("losses"))
       playerBuffer += player
     }
     playerBuffer.toArray  // better to return immutable values
@@ -269,6 +269,31 @@ class NimDB(val dbPath: String) {
     topPlayers.foreach(println)
   }
 
-//  def getFullPlayerInfo(): Array[Player] = {}
+  def getFullPlayerInfo(): Array[Player] = {
+    val winners = getTopWinners()
+    val losers = getTopLosers()
+    // for efficiency we create wto maps of name to actual Player
+    val winnerMap = winners.map(winner => (winner.name, winner)).toMap // so we have acces
+    val loserMap = losers.map(loser => (loser.name, loser)).toMap
+    val playersBuffer = ArrayBuffer[Player]()
+    for (winner <- winners) {
+      val losses = if (loserMap.contains(winner.name)) loserMap(winner.name).losses else 0
+      val id = getUserId(winner.name)
+      playersBuffer += Player(winner.name, id, winner.wins, losses)
+    }
+   for (loser <- losers) {
+     if (!winnerMap.contains(loser.name)) {
+       val id = getUserId(loser.name)
+       playersBuffer += Player(loser.name, id, 0, loser.losses)
+   }
+   }
+    playersBuffer.toArray
+  }
 
+  def printAllPlayers(): Unit = {
+    println("Full player info:")
+    val allPlayers = getFullPlayerInfo()
+    allPlayers.foreach(player => println(player.getPrettyString))
+
+  }
 }

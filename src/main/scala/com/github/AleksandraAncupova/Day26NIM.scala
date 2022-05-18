@@ -8,11 +8,6 @@ object Day26NIM extends App {
   //TODO implement basic version of https://en.wikipedia.org/wiki/Nim
   //https://en.wikipedia.org/wiki/Nim#The_21_game
 
-
-  //TODO setup/config - set data/state what is needed for the application
-  //TODO main application/game loop - it could be a loopless - if you process data only once
-  //TODO cleanup - close database connections, files etc
-
   //we will start with 21 matches/tokens
   val saveDst = "src/resources/nim/scores.csv"
   val db = new NimDB("src/resources/nim/nim.db")
@@ -23,7 +18,7 @@ object Day26NIM extends App {
 
   var playerA = readLine("Player A what is your name?")
   var playerB = readLine("Player B what is your name? (press ENTER for computer) ")
-  if (playerB == "") playerB = "COMPUTER" //TODO see if you can do the previos 2 lines at once
+  if (playerB == "") playerB = "COMPUTER"
 
   var computerLevel = 0
   if (playerB == "COMPUTER") {
@@ -85,22 +80,20 @@ object Day26NIM extends App {
     db.printAllPlayers()
 
     val nextGameInput = readLine("Do you want to play another game? (Y/N)")
-    if (nextGameInput.toLowerCase.startsWith("y")) {
 
+    if (nextGameInput.toLowerCase.startsWith("y")) {
+      isNewGameNeeded = true
     val arePlayersDifferent = readLine("Do you want to change players? (Y/N)")
 
     if (arePlayersDifferent.toLowerCase.startsWith("y")) {
-    playerA = readLine("Player A what is your name?")
-    playerB = readLine("Player B what is your name? (press ENTER for computer) ")
-    if (playerB == "") playerB = "COMPUTER"
+      playerA = readLine("Player A what is your name?")
+      playerB = readLine("Player B what is your name? (press ENTER for computer) ")
+      if (playerB == "") {
+        playerB = "COMPUTER"
         computerLevel = getIntegerInput("Please enter computer level (1-3)")
-        isNewGameNeeded = true
-    } else {
-      computerLevel = getIntegerInput("Please enter computer level (1-3)")
-      isNewGameNeeded = true
+      }
     }
     } else isNewGameNeeded = false
-
   }
 
 

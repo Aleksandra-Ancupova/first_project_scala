@@ -1,6 +1,8 @@
 package com.github.AleksandraAncupova
 
-case class Player (name:String, id: Int=0, wins: Int=0, losses: Int=0)
+case class Player (name:String, id: Int=0, wins: Int=0, losses: Int=0) {
+  def getPrettyString: String = s"Player name: $name, id: $id, wins: $wins, losses: $losses"
+}
 
 object Day29HighScores extends App{
 
