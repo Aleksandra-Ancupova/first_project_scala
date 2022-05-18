@@ -13,6 +13,8 @@ object ToDoDBCon extends App {
   val db = new ToDoDB("src/resources/todo/todo.db")
 
   // create tables in DB
+
+ // db.dropAllTables()
   db.migrate()
 
   // checking if it works
