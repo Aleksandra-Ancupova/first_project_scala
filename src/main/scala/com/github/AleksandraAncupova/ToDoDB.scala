@@ -1,6 +1,7 @@
 package com.github.AleksandraAncupova
 
 import java.sql.{DriverManager, PreparedStatement}
+import scala.collection.mutable.ArrayBuffer
 
 class ToDoDB(val dbPath: String) {
 
@@ -87,5 +88,38 @@ class ToDoDB(val dbPath: String) {
 
   }
 
+  def getRemainingTasks():Array[Task] = {
+
+    val sql =
+      """
+        |SELECT * FROM tasks
+        |WHERE status != "finished";
+        |""".stripMargin
+
+    val taskBuffer = ArrayBuffer[Task]() //so we start with an empty buffer to store our rows
+    val statement = conn.createStatement()
+    val rs = statement.executeQuery(sql)
+    while (rs.next()) {
+      val task = Task(rs.getInt("id"),
+        rs.getString("task"),
+        rs.getString("created"),
+        rs.getString("deadline"),
+        rs.getString("status"))
+      taskBuffer += task
+    }
+    taskBuffer.toArray //better to return immutable values
+  }
+
+  def updateTaskStatusDB(taskID: Int, status: String): Unit ={
+    val statement = conn.createStatement()
+    val sql =
+      """
+        |UPDATE tasks
+        |SET status = ?
+        |WHERE id = ?;
+        |""".stripMargin
+
+    statement.execute(sql)
+  }
 
 }
