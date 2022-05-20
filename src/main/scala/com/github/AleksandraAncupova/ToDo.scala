@@ -9,7 +9,6 @@ def getPrettyString: String = s"ID: $id, Task: $task, created: $created, status:
 
 }
 
-
 class ToDo( val task: String,
             val created: String =  DateTimeFormatter.ofPattern("yyyy-MM-ddnHH:mm").format(LocalDateTime.now),
             val status: String = "created",
@@ -23,8 +22,8 @@ class ToDo( val task: String,
     // TODO check if the deadline is not not earlier than current time
     val deadline = readLine("Enter the deadline (ENTER to skip): (yyyy-MM-dd HH:mm)")
 
-
-    db.insertTask(task, deadline, status)
+    println(s"New ToDo is created: $task, deadline: $deadline")
+    db.insertTaskDB(task, deadline, status)
   }
   def showRemainingTasks(): Unit = {
 
@@ -35,40 +34,32 @@ class ToDo( val task: String,
 
   }
 
-  def newStatus: String = {
-
-  val newStatus = readLine("Choose the status:\n" +
-    "(C) created\n" +
-    "(P) in progress\n" +
-    "(F) finished")
-
-  var updatedStatus = ""
-  if (newStatus.toLowerCase.startsWith("c")) updatedStatus = "created"
-  else if (newStatus.toLowerCase.startsWith("p")) updatedStatus = "in progress"
-  else updatedStatus = "finished"
-  updatedStatus
-
-  }
-
   def updateTaskStatus(): Unit = {
     //need to show task list, so:
     showRemainingTasks()
 
     val chosenTask = readLine("Please enter the ID of the task to be updated:").toInt
 
-    println(s"Great, task with ID $chosenTask was updated. New status is $newStatus")
+    var updatedStatus = readLine("Choose the status:\n" +
+      "(C) created\n" +
+      "(P) in progress\n" +
+      "(F) finished")
 
-   db.updateTaskStatusDB(chosenTask, newStatus)
+    if (updatedStatus.toLowerCase.startsWith("c")) updatedStatus = "created"
+    else if (updatedStatus.toLowerCase.startsWith("p")) updatedStatus = "in progress"
+    else updatedStatus = "finished"
+
+    println(s"Great, task with ID $chosenTask was updated. New status is: $updatedStatus")
+
+   db.updateTaskStatusDB(chosenTask, updatedStatus)
 
   }
-
-
 
   /**
    * leave the main loop
    */
   def quit(): Unit = {
-    println("All is done! See you next time.")
+    println("All is done! See you next time :)")
 
   }
 

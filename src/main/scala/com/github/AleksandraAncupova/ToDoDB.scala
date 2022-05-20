@@ -70,7 +70,7 @@ class ToDoDB(val dbPath: String) {
 
 
   // inserting full task info into table
-  def insertTask(task: String, deadline: String, status: String): Unit = {
+  def insertTaskDB(task: String, deadline: String, status: String): Unit = {
     val sql =
       """
         |INSERT INTO tasks (task, created, deadline, status)
@@ -111,7 +111,6 @@ class ToDoDB(val dbPath: String) {
   }
 
   def updateTaskStatusDB(taskID: Int, status: String): Unit ={
-    val statement = conn.createStatement()
     val sql =
       """
         |UPDATE tasks
@@ -119,7 +118,13 @@ class ToDoDB(val dbPath: String) {
         |WHERE id = ?;
         |""".stripMargin
 
-    statement.execute(sql)
+    val preparedStmt: PreparedStatement = conn.prepareStatement(sql)
+
+    preparedStmt.setString(1, status)
+    preparedStmt.setInt(2, taskID)
+
+    preparedStmt.execute
+    preparedStmt.close()
   }
 
 }

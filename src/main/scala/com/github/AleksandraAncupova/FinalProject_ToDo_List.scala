@@ -27,6 +27,7 @@ import scala.io.StdIn.readLine
 
       var userIsActive = true
       val db = new ToDoDB("src/resources/todo/todo.db")
+
       val toDo = new ToDo("", "","","") //TODO check if ToDo class needs parameters
 
 
@@ -38,11 +39,10 @@ import scala.io.StdIn.readLine
 
       def setup(): Unit = {
         while (userIsActive) {
-          val function = readLine("What would you like to do (choose a letter please):\n" +
+          val function = readLine("What would you like to do (choose an option please):\n" +
             "(E) enter a new task\n" +
             "(U) update status of existing task\n" +
             "(R) show remaining tasks\n" +
-            "(D) delete task\n" +
             "(Q) quit\n")
 
           if (function.toLowerCase.startsWith("e")) {
