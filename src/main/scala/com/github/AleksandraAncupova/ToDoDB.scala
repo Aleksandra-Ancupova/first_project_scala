@@ -1,6 +1,8 @@
 package com.github.AleksandraAncupova
 
 import java.sql.{DriverManager, PreparedStatement}
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import scala.collection.mutable.ArrayBuffer
 
 class ToDoDB(val dbPath: String) {
@@ -11,15 +13,15 @@ class ToDoDB(val dbPath: String) {
 
   println(s"Database is opened at ${conn.getMetaData.getURL}")
 
-  def dropAllTables():Unit = {
+  def dropTable():Unit = {
     val statement = conn.createStatement()
     val sql =
       """
-        |DROP TABLE IF EXISTS tasks;
+        |DROP TABLE IF EXISTS statuses;
         |""".stripMargin
 
     statement.execute(sql)
-  }
+    }
 
   def migrate(): Unit = {
   // creating tables in DB
@@ -53,28 +55,12 @@ class ToDoDB(val dbPath: String) {
 
   }
 
-  def insertNewStatus(status: String): Unit = {
-    val sql =
-      """
-        |INSERT INTO statuses (status)
-        |VALUES (?);
-        |""".stripMargin
-
-    val preparedStmt: PreparedStatement = conn.prepareStatement(sql)
-
-    preparedStmt.setString(1, status)
-
-    preparedStmt.execute
-    preparedStmt.close()
-  }
-
-
   // inserting full task info into table
   def insertTaskDB(task: String, deadline: String, status: String): Unit = {
     val sql =
       """
         |INSERT INTO tasks (task, created, deadline, status)
-        |VALUES (?, CURRENT_TIMESTAMP, ?, ?)
+        |VALUES (?, datetime('now', 'localtime'), ?, ?)
         |""".stripMargin
 
     val preparedStmt: PreparedStatement = conn.prepareStatement(sql)
@@ -88,6 +74,8 @@ class ToDoDB(val dbPath: String) {
 
   }
 
+
+  // shows all tasks that are not finished
   def getRemainingTasks():Array[Task] = {
 
     val sql =
@@ -108,7 +96,33 @@ class ToDoDB(val dbPath: String) {
       taskBuffer += task
     }
     taskBuffer.toArray //better to return immutable values
+
   }
+
+  def getFinishedTasks():Array[Task] = {
+
+    val sql =
+      """
+        |SELECT * FROM tasks
+        |WHERE status = "finished";
+        |""".stripMargin
+
+    val taskBuffer = ArrayBuffer[Task]() //so we start with an empty buffer to store our rows
+    val statement = conn.createStatement()
+    val rs = statement.executeQuery(sql)
+    while (rs.next()) {
+      val task = Task(rs.getInt("id"),
+        rs.getString("task"),
+        rs.getString("created"),
+        rs.getString("deadline"),
+        rs.getString("status"))
+      taskBuffer += task
+    }
+    taskBuffer.toArray //better to return immutable values
+  }
+
+
+
 
   def updateTaskStatusDB(taskID: Int, status: String): Unit ={
     val sql =

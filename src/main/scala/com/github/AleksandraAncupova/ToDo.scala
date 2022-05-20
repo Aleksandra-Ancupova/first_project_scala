@@ -31,8 +31,16 @@ class ToDo( val task: String,
     val remainingTasks = db.getRemainingTasks
     //val allPlayers = getFullPlayerInfo()
     remainingTasks.foreach(task => println(task.getPrettyString))
-
   }
+
+  def showFinishedTasks(): Unit = {
+
+    println("Finished tasks are:")
+    val finishedTasks = db.getFinishedTasks()
+    finishedTasks.foreach(task => println(task.getPrettyString))
+    println("Keep up the good work")
+  }
+
 
   def updateTaskStatus(): Unit = {
     //need to show task list, so:
@@ -59,6 +67,7 @@ class ToDo( val task: String,
    * leave the main loop
    */
   def quit(): Unit = {
+    FinalProject_ToDo_List.userIsActive = false
     println("All is done! See you next time :)")
 
   }

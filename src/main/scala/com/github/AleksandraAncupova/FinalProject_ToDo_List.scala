@@ -25,11 +25,12 @@ import scala.io.StdIn.readLine
 
     object FinalProject_ToDo_List extends App {
 
-      var userIsActive = true
-      val db = new ToDoDB("src/resources/todo/todo.db")
+
+      // val db = new ToDoDB("src/resources/todo/todo.db")  = looks like we don't need it here?
 
       val toDo = new ToDo("", "","","") //TODO check if ToDo class needs parameters
 
+      var userIsActive = true
 
     println("Hi there!\nThis is a Task List Manager")
 
@@ -39,27 +40,28 @@ import scala.io.StdIn.readLine
 
       def setup(): Unit = {
         while (userIsActive) {
-          val function = readLine("What would you like to do (choose an option please):\n" +
+          val function =
+            readLine("\nWhat would you like to do (choose an option please):\n" +
             "(E) enter a new task\n" +
             "(U) update status of existing task\n" +
             "(R) show remaining tasks\n" +
+            "(F) show finished tasks\n" +
             "(Q) quit\n")
 
-          if (function.toLowerCase.startsWith("e")) {
-            toDo.enterNewTask()
-          }
-          else if (function.toLowerCase.startsWith("u")) {
-            toDo.updateTaskStatus()
-          }
-          else if (function.toLowerCase.startsWith("r")) {
-            toDo.showRemainingTasks()
-          }
-          else {
-            toDo.quit()
-            userIsActive = false
-          }
+          val input = function.toLowerCase
+
+          input match {
+              case "e" => toDo.enterNewTask()
+              case "u" => toDo.updateTaskStatus()
+              case "r" => toDo.showRemainingTasks()
+              case "f" => toDo.showFinishedTasks()
+              case "q" => toDo.quit()
+              case _ => println("Please choose one of the options above!")
+            }
         }
       }
+
+
       setup()
 
 
