@@ -6,7 +6,10 @@ import scala.io.StdIn.readLine
 
 case class Task(id: Int, task: String, created:String,  deadline:String, status:String) {
 def getPrettyString: String = s"ID: $id, Task: $task, created: $created, status: $status, deadline: $deadline"
+}
 
+case class Status (status: String, numberOfTasks: Int) {
+  def statusPrettyPrint: String = s"There are $numberOfTasks tasks with status $status"
 }
 
 class ToDo( val task: String,
@@ -36,9 +39,9 @@ class ToDo( val task: String,
   def showFinishedTasks(): Unit = {
 
     println("Finished tasks are:")
-    val finishedTasks = db.getFinishedTasks()
+    val finishedTasks = db.getFinishedTasks
     finishedTasks.foreach(task => println(task.getPrettyString))
-    println("Keep up the good work")
+    println("\nKeep up the good work!")
   }
 
 
@@ -66,6 +69,12 @@ class ToDo( val task: String,
   /**
    * leave the main loop
    */
+
+  def printStats(): Unit = {
+    val result = db.getStatsDB
+    result.foreach(status => println(status.statusPrettyPrint))
+  }
+
   def quit(): Unit = {
     FinalProject_ToDo_List.userIsActive = false
     println("All is done! See you next time :)")

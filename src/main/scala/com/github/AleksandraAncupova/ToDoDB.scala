@@ -76,7 +76,7 @@ class ToDoDB(val dbPath: String) {
 
 
   // shows all tasks that are not finished
-  def getRemainingTasks():Array[Task] = {
+  def getRemainingTasks:Array[Task] = {
 
     val sql =
       """
@@ -99,7 +99,7 @@ class ToDoDB(val dbPath: String) {
 
   }
 
-  def getFinishedTasks():Array[Task] = {
+  def getFinishedTasks:Array[Task] = {
 
     val sql =
       """
@@ -118,7 +118,7 @@ class ToDoDB(val dbPath: String) {
         rs.getString("status"))
       taskBuffer += task
     }
-    taskBuffer.toArray //better to return immutable values
+    taskBuffer.toArray
   }
 
 
@@ -140,5 +140,25 @@ class ToDoDB(val dbPath: String) {
     preparedStmt.execute
     preparedStmt.close()
   }
+
+  def getStatsDB: Array[Status] = {
+    val statement = conn.createStatement()
+    val sql =
+      """
+        |SELECT status, COUNT(*) numberOfTasks
+        |FROM tasks
+        |GROUP BY status;
+        |""".stripMargin
+
+    val rs = statement.executeQuery(sql)
+    val statusBuffer = ArrayBuffer[Status]()
+    while (rs.next()) {
+     val status = Status(rs.getString("status"),
+        rs.getInt("numberOfTasks"))
+     statusBuffer += status
+    }
+    statusBuffer.toArray
+  }
+
 
 }

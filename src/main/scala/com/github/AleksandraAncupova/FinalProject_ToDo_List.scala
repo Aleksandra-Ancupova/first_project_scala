@@ -46,6 +46,7 @@ import scala.io.StdIn.readLine
             "(U) update status of existing task\n" +
             "(R) show remaining tasks\n" +
             "(F) show finished tasks\n" +
+            "(S) print some stats\n" +
             "(Q) quit\n")
 
           val input = function.toLowerCase
@@ -55,6 +56,7 @@ import scala.io.StdIn.readLine
               case "u" => toDo.updateTaskStatus()
               case "r" => toDo.showRemainingTasks()
               case "f" => toDo.showFinishedTasks()
+              case "s" => toDo.printStats()
               case "q" => toDo.quit()
               case _ => println("Please choose one of the options above!")
             }
@@ -63,6 +65,7 @@ import scala.io.StdIn.readLine
 
 
       setup()
+
 
 
 
