@@ -1,8 +1,6 @@
-package com.github.AleksandraAncupova
+package com.github.AleksandraAncupova.FinalAssignment
 
 import java.sql.{DriverManager, PreparedStatement}
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import scala.collection.mutable.ArrayBuffer
 
 class ToDoDB(val dbPath: String) {
@@ -13,16 +11,22 @@ class ToDoDB(val dbPath: String) {
 
   println(s"Database is opened at ${conn.getMetaData.getURL}")
 
+  /**
+   * drops/deletes a whole table of tasks
+   */
   def dropTable():Unit = {
     val statement = conn.createStatement()
     val sql =
       """
-        |DROP TABLE IF EXISTS statuses;
+        |DROP TABLE IF EXISTS tasks;
         |""".stripMargin
 
     statement.execute(sql)
     }
 
+  /**
+   * creates new table of users (not used currently) and tasks in the DB
+   */
   def migrate(): Unit = {
   // creating tables in DB
 
@@ -30,9 +34,9 @@ class ToDoDB(val dbPath: String) {
 
     val sql =
       """
-        |CREATE TABLE IF NOT EXISTS statuses (
+        |CREATE TABLE IF NOT EXISTS users (
         |id INTEGER PRIMARY KEY,
-        |status TEXT NOT NULL
+        |userName TEXT NOT NULL
         |);
         |""".stripMargin
 
@@ -45,9 +49,7 @@ class ToDoDB(val dbPath: String) {
         |task TEXT NOT NULL,
         |created TEXT,
         |deadline TEXT,
-        |status TEXT NOT NULL,
-        |   FOREIGN KEY (status)
-        |     REFERENCES statuses (id)
+        |status TEXT NOT NULL
         |);
         |""".stripMargin
 
@@ -55,7 +57,26 @@ class ToDoDB(val dbPath: String) {
 
   }
 
-  // inserting full task info into table
+  def saveUser(userName: String): Unit = {
+    val sql =
+      """
+        |INSERT INTO users (userName)
+        |VALUES (?)
+        |""".stripMargin
+
+    val preparedStmt: PreparedStatement = conn.prepareStatement(sql)
+    preparedStmt.setString(1, userName)
+
+    preparedStmt.execute
+    preparedStmt.close()
+  }
+
+  /**
+   * inserts full information about the task into DB
+   * @param task
+   * @param deadline
+   * @param status
+   */
   def insertTaskDB(task: String, deadline: String, status: String): Unit = {
     val sql =
       """
@@ -75,7 +96,10 @@ class ToDoDB(val dbPath: String) {
   }
 
 
-  // shows all tasks that are not finished
+  /**
+   * returns all tasks that are not finished
+   * @return
+   */
   def getRemainingTasks:Array[Task] = {
 
     val sql =
@@ -99,6 +123,10 @@ class ToDoDB(val dbPath: String) {
 
   }
 
+  /**
+   * returns all tasks that are finished
+   * @return
+   */
   def getFinishedTasks:Array[Task] = {
 
     val sql =
@@ -121,9 +149,40 @@ class ToDoDB(val dbPath: String) {
     taskBuffer.toArray
   }
 
+  /**
+   * returns total number of tasks in DB
+   * @return
+   */
+  def getNumberOfTasks():Int = {
+    val sql =
+      """
+        |SELECT COUNT(*) Number
+        |FROM tasks
+        |""".stripMargin
 
+    val statement = conn.createStatement()
+    val rs = statement.executeQuery(sql)
+    rs.getInt("Number")
+  }
 
+  /**
+   * deletes all finished tasks from the DB
+   */
+  def deleteFinishedTasks(): Unit = {
+    val sqlDelete =
+      """
+        |DELETE FROM tasks
+        |WHERE status = "finished"
+        |""".stripMargin
+    val statement = conn.createStatement()
+    statement.executeUpdate(sqlDelete)
+  }
 
+  /**
+   * updates task status in the DB for a provided taskID
+   * @param taskID
+   * @param status
+   */
   def updateTaskStatusDB(taskID: Int, status: String): Unit ={
     val sql =
       """
@@ -141,6 +200,10 @@ class ToDoDB(val dbPath: String) {
     preparedStmt.close()
   }
 
+  /**
+   * gets how many rows are in each status in the DB
+   * @return
+   */
   def getStatsDB: Array[Status] = {
     val statement = conn.createStatement()
     val sql =
@@ -160,5 +223,30 @@ class ToDoDB(val dbPath: String) {
     statusBuffer.toArray
   }
 
+  /**
+   * gets not finished tasks sorted by deadline
+   * @return
+   */
+  def sortTaskByDate(): Array[Task] = {
+    val sqlSort =
+      """
+        |SELECT * FROM tasks
+        |WHERE status != "finished"
+        |ORDER BY deadline
+        |LIMIT 5;
+        |""".stripMargin
+    val statement = conn.createStatement()
+    val rs = statement.executeQuery(sqlSort)
+    val taskBuffer = ArrayBuffer[Task]()
+    while (rs.next()) {
+      val task = Task(rs.getInt("id"),
+        rs.getString("task"),
+        rs.getString("created"),
+        rs.getString("deadline"),
+        rs.getString("status"))
+      taskBuffer += task
+    }
+    taskBuffer.toArray
+  }
 
 }
