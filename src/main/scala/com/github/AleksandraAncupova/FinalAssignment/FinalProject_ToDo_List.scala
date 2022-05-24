@@ -40,7 +40,7 @@ object FinalProject_ToDo_List extends App {
   }
 
   /**
-   * helper function to print info/stats about tasks separately or quit
+   * helper function that asks user which info/stats about tasks he wants to see
    */
   def statsOption(): Unit = {
     val input2 = readLine("\nWhich stats would you like to see (choose an option please):\n" +
