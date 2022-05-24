@@ -5,11 +5,11 @@ import scala.collection.mutable.ArrayBuffer
 
 /**
  * class that keeps information retrieved from the DB about each task
- * @param id
- * @param task
- * @param created
- * @param deadline
- * @param status
+ * @param id task ID
+ * @param task short title of the task
+ * @param created current timestamp
+ * @param deadline date/time format entered for finished the task
+ * @param status created, in progress or finished
  */
 case class Task(id: Int, task: String, created:String,  deadline:String, status:String) {
   def getPrettyString: String = s"ID: $id, Task: $task, created: $created, status: $status, deadline: $deadline"
@@ -17,8 +17,8 @@ case class Task(id: Int, task: String, created:String,  deadline:String, status:
 
 /**
  * class that keeps information retrieved from the DB about number of tasks is each status
- * @param status
- * @param numberOfTasks
+ * @param status created, in progress or finished
+ * @param numberOfTasks number of task rows/status
  */
 case class Status (status: String, numberOfTasks: Int) {
   def statusPrettyPrint: String = s"There are $numberOfTasks tasks with status $status"
@@ -94,9 +94,9 @@ class ToDoDB(val dbPath: String) {
 
   /**
    * inserts full information about the task into DB
-   * @param task
-   * @param deadline
-   * @param status
+   * @param task short title of the task
+   * @param deadline date/time format entered for finished the task
+   * @param status created, in progress or finished
    */
   def insertTaskDB(task: String, deadline: String, status: String): Unit = {
     val sql =
@@ -201,8 +201,8 @@ class ToDoDB(val dbPath: String) {
 
   /**
    * updates task status in the DB for a provided taskID
-   * @param taskID
-   * @param status
+   * @param taskID ID of the task entered by user
+   * @param status status entered by user (created, in progress or finished)
    */
   def updateTaskStatusDB(taskID: Int, status: String): Unit ={
     val sql =

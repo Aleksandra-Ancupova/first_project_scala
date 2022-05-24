@@ -70,7 +70,7 @@ class ToDo( val task: String,
 
   def deleteFinishedTasks(): Unit = {
     println("Deleting finished tasks")
-    db.deleteFinishedTasks
+    db.deleteFinishedTasks()
   }
 
   def updateTaskStatus(): Unit = {
@@ -104,7 +104,7 @@ class ToDo( val task: String,
   }
 
   def showUrgentTasks(): Unit = {
-    val urgentTasks = db.sortTaskByDate
+    val urgentTasks = db.sortTaskByDate()
     println("5 most urgent tasks are:\n")
     urgentTasks.foreach(task => println(task.getPrettyString))
   }
