@@ -78,6 +78,10 @@ class ToDoDB(val dbPath: String) {
 
   }
 
+  /**
+   * saves user name into user table
+   * @param userName name of the user
+   */
   def saveUser(userName: String): Unit = {
     val sql =
       """

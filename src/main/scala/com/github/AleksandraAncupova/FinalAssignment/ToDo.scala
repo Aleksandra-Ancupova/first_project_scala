@@ -1,18 +1,13 @@
 package com.github.AleksandraAncupova.FinalAssignment
 
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import scala.io.StdIn.readLine
 
-class ToDo( val task: String,
-            val created: String =  DateTimeFormatter.ofPattern("yyyy-MM-ddnHH:mm").format(LocalDateTime.now),
-            val status: String = "created",
-            val deadline: String) {
+class ToDo {
 
   val db = new ToDoDB("src/resources/todo/todo.db")
 
   /**
-   * asks for task and dealing for it to be entered and saves taks info into DB
+   * gets the information about task (task, status, deadline) and enters it to the database
    */
     def enterNewTask():Unit = {
     val task = readLine("Enter the task: ")
@@ -27,6 +22,11 @@ class ToDo( val task: String,
     db.insertTaskDB(task, deadline, status)
   }
 
+  /**
+   *returns false if date has wrong format
+   * @param deadline - the deadline for task inserted by user
+   * @return true if the inserted date has correct format or if it is skipped and
+   */
   def getDate(deadline: String):Boolean = {
 
     val yearInserted = getYearMonthDayRegEx(deadline)._1
@@ -40,6 +40,12 @@ class ToDo( val task: String,
     boolean
   }
 
+  /**
+   * returns appropriate messages and false if it isn't correct
+   * @param dateString - deadline inserted together with task
+   * @return year, month and day of the deadline and true if it is correct or
+   */
+
   def getYearMonthDayRegEx(dateString: String): (String, String, String, String, String, Boolean) = {
     val dateRegEx = raw"(\d){4}\D(\d){2}\D(\d){2}\D(\d){1,2}\D(\d){2}".r
     dateString match {
@@ -49,6 +55,9 @@ class ToDo( val task: String,
     }
   }
 
+  /**
+   * returns the pretty print of remaining tasks
+   */
   def showRemainingTasks(): Unit = {
     val remainingTasks = db.getRemainingTasks
     if (remainingTasks.length == 0) println("No tasks in database!")
@@ -58,6 +67,9 @@ class ToDo( val task: String,
     }
   }
 
+  /**
+   * returns the pretty print of finished tasks
+   */
   def showFinishedTasks(): Unit = {
     val finishedTasks = db.getFinishedTasks
     if (finishedTasks.length == 0) println(s"Go forward! You do not have any competed tasks.")
@@ -68,11 +80,17 @@ class ToDo( val task: String,
     }
   }
 
+  /**
+   * deletes finished tasks by applying to SQL query
+   */
   def deleteFinishedTasks(): Unit = {
     println("Deleting finished tasks")
     db.deleteFinishedTasks()
   }
 
+  /**
+   * @return updated status in DB
+   */
   def updateTaskStatus(): Unit = {
     //need to show task list, so:
     showRemainingTasks()
@@ -94,22 +112,27 @@ class ToDo( val task: String,
 
   }
 
-  /**
-   * leave the main loop
-   */
 
+  /**
+   * returns print of stats of different statuses
+   */
   def printStats(): Unit = {
     val result = db.getStatsDB
     result.foreach(status => println(status.statusPrettyPrint))
   }
 
+  /**
+   * returns print of most urgent tasks
+   */
   def showUrgentTasks(): Unit = {
     val urgentTasks = db.sortTaskByDate()
     println("5 most urgent tasks are:\n")
     urgentTasks.foreach(task => println(task.getPrettyString))
   }
 
-
+  /**
+   * leave the main loop
+   */
   def quit(): Unit = {
     FinalProject_ToDo_List.userIsActive = false
     println("All is done! See you next time :)")

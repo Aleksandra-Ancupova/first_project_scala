@@ -8,7 +8,7 @@ import scala.io.StdIn.readLine
 
 object FinalProject_ToDo_List extends App {
 
-  val toDo = new ToDo("", "", "", "")
+  val toDo = new ToDo
 
   var userIsActive = true
 
