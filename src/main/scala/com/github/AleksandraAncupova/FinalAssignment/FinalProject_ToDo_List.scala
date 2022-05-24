@@ -2,19 +2,20 @@ package com.github.AleksandraAncupova.FinalAssignment
 
 import scala.io.StdIn.readLine
 
+/**
+ * object in which user chooses what to do in a Task Manager
+ */
+
 object FinalProject_ToDo_List extends App {
 
-
-  // val db = new ToDoDB("src/resources/todo/todo.db")  = looks like we don't need it here?
-
-  val toDo = new ToDo("", "", "", "") //TODO check if ToDo class needs parameters
+  val toDo = new ToDo("", "", "", "")
 
   var userIsActive = true
 
   println("Hi there!\nThis is a Task List Manager")
 
   /**
-   * main loop that offers user choice of actions
+   * main loop that offers user choice of actions until he quits
    *
    */
   def setup(): Unit = {
@@ -39,7 +40,7 @@ object FinalProject_ToDo_List extends App {
   }
 
   /**
-   * helper function to print info/stats about tasks separately
+   * helper function to print info/stats about tasks separately or quit
    */
   def statsOption(): Unit = {
     val input2 = readLine("\nWhich stats would you like to see (choose an option please):\n" +
