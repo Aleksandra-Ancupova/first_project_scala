@@ -2,6 +2,9 @@ package com.github.AleksandraAncupova.FinalAssignment
 
 import java.nio.file.{Files, Paths}
 
+/**
+ * object holds database connection set up for FinalProject
+ */
 object ToDoDBCon extends App {
 
   // create directory
