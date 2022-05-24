@@ -9,18 +9,19 @@ class ToDo {
   /**
    * gets the information about task (task, status, deadline) and enters it to the database
    */
-    def enterNewTask():Unit = {
+  def enterNewTask():Unit = {
     val task = readLine("Enter the task: ")
     var deadline = readLine("Enter the deadline (ENTER to skip): (yyyy-MM-dd HH:mm)")
 
-    while (!getDate(deadline))
-      deadline = readLine("Enter the deadline (ENTER to skip): (yyyy-MM-dd HH:mm)")
+    while (!getDate(deadline)) {
+      deadline = readLine("Enter the deadline (ENTER to skip): (yyyy-MM-dd) HH:mm")
+    }
 
     val status = "created"
     println(s"New ToDo is created: $task, deadline: $deadline")
-
     db.insertTaskDB(task, deadline, status)
   }
+
 
   /**
    *returns false if date has wrong format
@@ -49,9 +50,9 @@ class ToDo {
   def getYearMonthDayRegEx(dateString: String): (String, String, String, String, String, Boolean) = {
     val dateRegEx = raw"(\d){4}\D(\d){2}\D(\d){2}\D(\d){1,2}\D(\d){2}".r
     dateString match {
-      case dateRegEx(year, month, day, hours, minutes) => (year, month, day, hours, minutes, true)
-      case "" =>("N/A", "N/A", "N/A", "N/A","N/A", true)
-      case _ => ("NO YEAR", "NO MONTH", "NO DAY", "NO HOURS", "NO MINUTES", false)
+      case dateRegEx(year, month, day, hour, minute) => (year, month, day, hour, minute, true)
+      case "" =>("N/A", "N/A", "N/A", "N/A", "N/A", true)
+      case _ => ("NO YEAR", "NO MONTH", "NO DAY", "NO HOUR", "NO MINUTE", false)
     }
   }
 
