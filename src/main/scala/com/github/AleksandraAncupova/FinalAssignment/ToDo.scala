@@ -4,14 +4,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import scala.io.StdIn.readLine
 
-case class Task(id: Int, task: String, created:String,  deadline:String, status:String) {
-def getPrettyString: String = s"ID: $id, Task: $task, created: $created, status: $status, deadline: $deadline"
-}
-
-case class Status (status: String, numberOfTasks: Int) {
-  def statusPrettyPrint: String = s"There are $numberOfTasks tasks with status $status"
-}
-
 class ToDo( val task: String,
             val created: String =  DateTimeFormatter.ofPattern("yyyy-MM-ddnHH:mm").format(LocalDateTime.now),
             val status: String = "created",

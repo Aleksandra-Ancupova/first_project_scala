@@ -3,6 +3,27 @@ package com.github.AleksandraAncupova.FinalAssignment
 import java.sql.{DriverManager, PreparedStatement}
 import scala.collection.mutable.ArrayBuffer
 
+/**
+ * class that keeps information retrieved from the DB about each task
+ * @param id
+ * @param task
+ * @param created
+ * @param deadline
+ * @param status
+ */
+case class Task(id: Int, task: String, created:String,  deadline:String, status:String) {
+  def getPrettyString: String = s"ID: $id, Task: $task, created: $created, status: $status, deadline: $deadline"
+}
+
+/**
+ * class that keeps information retrieved from the DB about number of tasks is each status
+ * @param status
+ * @param numberOfTasks
+ */
+case class Status (status: String, numberOfTasks: Int) {
+  def statusPrettyPrint: String = s"There are $numberOfTasks tasks with status $status"
+}
+
 class ToDoDB(val dbPath: String) {
 
   val url = s"jdbc:sqlite:$dbPath"
